@@ -1,0 +1,3 @@
+.venv
+*.jpg
+activation_map.npy
