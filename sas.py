@@ -34,7 +34,7 @@ imagenet_mean = [0.485, 0.456, 0.406]
 imagenet_std  = [0.229, 0.224, 0.225]
 
 transform = T.Compose([
-    T.Resize((224, 224)),  # Force 224x224
+    T.Resize((224, 224)),  
     T.ToTensor(),
     T.Normalize(mean=imagenet_mean, std=imagenet_std),
 ])
