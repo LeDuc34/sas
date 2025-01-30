@@ -103,9 +103,7 @@ class SmoothAndPool(nn.Module):
 
 
 def mask_with_area(em, area_frac):
-    """
-    Solve t s.t. mean(sigmoid(em - t))=area_frac (bisection).
-    """
+
     lower, upper = -5.0, 5.0
     for _ in range(20):
         mid = 0.5*(lower + upper)
@@ -120,9 +118,7 @@ def mask_with_area(em, area_frac):
     return mk
 
 def generate_mask_schedule(em, K=20):
-    """
-    Return list of (K+1) masks from fraction=0..1.
-    """
+ 
     masks = []
     for i in range(K+1):
         frac = i/float(K)
