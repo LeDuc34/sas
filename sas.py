@@ -12,13 +12,13 @@ from PIL import Image
 CONFIG = {
     "image_path": "input.jpg",     
     "target_class": 1,           
-    "num_iters": 50,              
+    "num_iters": 100,              
     "lr": 0.01,                    
     "K": 20,                        
     "gaussian_kernel_size": 17,     
     "blur_ksize": 51,              
-    "temp_factor": 1,            
-    "tv_lambda": 0.01,            
+    "temp_factor": 0.3,            
+    "tv_lambda": 0.08,            
 }
 
 
@@ -74,14 +74,12 @@ class SmoothAndPool(nn.Module):
         self.temp_factor = temp_factor
         sigma = kernel_size / 6.0
 
-        # Build a 2D Gaussian kernel
         ax = torch.arange(-kernel_size//2 + 1., kernel_size//2 + 1.)
         xx = ax.repeat(kernel_size,1)
         yy = xx.t()
         kernel = torch.exp(-(xx**2 + yy**2)/(2.*sigma*sigma))
         kernel = kernel / kernel.sum()
 
-        # Convolution
         self.gaussian_filter = nn.Conv2d(
             in_channels=1,
             out_channels=1,
