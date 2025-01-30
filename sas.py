@@ -45,18 +45,14 @@ inv_transform = T.Compose([
 ])
 
 def load_image(image_path):
-    """
-    Load image, resize to (224,224), normalize => shape [1,3,224,224].
-    """
+
     img = Image.open(image_path).convert('RGB')
     tensor = transform(img).unsqueeze(0).to(device)
     print(f"Loaded image: {image_path} => {tuple(tensor.shape)}")
     return tensor
 
 def create_blurred_background(img, ksize=51):
-    """
-    Single Gaussian blur with OpenCV. shape [B,3,H,W].
-    """
+ 
     img_np = img.detach().cpu().numpy() 
     out_np = np.zeros_like(img_np)
     for b in range(img_np.shape[0]):
@@ -65,20 +61,13 @@ def create_blurred_background(img, ksize=51):
     return torch.from_numpy(out_np).to(device)
 
 def apply_mask(x, mask, blur_image):
-    """
-    x, blur_image: [B,3,H,W]
-    mask: [B,1,H,W] => broadcast to 3ch => combine
-    """
+
     mask_3ch = mask.repeat(1, x.size(1), 1, 1)
     return mask_3ch * x + (1 - mask_3ch) * blur_image
 
 
 class SmoothAndPool(nn.Module):
-    """
-    1) Gaussian smoothing (5x5 => same size)
-    2) 'Soft' max-like pooling (3x3 => same size)
-    With a reduced temperature factor from outside config.
-    """
+   
     def __init__(self, kernel_size=5, temp_factor=2.0):
         super().__init__()
         self.kernel_size = kernel_size
